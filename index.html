@@ -162,32 +162,32 @@
   </div>
   <p class="footer">beacons.ai/jfbteam</p>
 </div>
-
+ 
 <script>
-const WEBHOOK = 'https://script.google.com/macros/s/AKfycbzJLT23CJ1oajjZTgD5eVLgfKbA0vsFzsH5L0N_UCqQ4jYCX7yPZm6u1jLhGKBUuJe6tw/exec';
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxOeKd9mDkQ5v-UKZ77-kWqt9dpzuymXfY2nMS_rR52VW7qVnIzIKcCaP2NOWVVhNei-Q/exec';
 let prospects = [];
-
+ 
 async function ajouterProspect() {
   const prenom = document.getElementById('prenom').value.trim();
   const email = document.getElementById('email').value.trim();
   const source = document.getElementById('source').value;
   const btn = document.getElementById('btn');
-
+ 
   if (!email) { afficherMsg('Saisis au moins un email.', 'err'); return; }
-
+ 
   btn.disabled = true;
   btn.textContent = 'Ajout en cours...';
-
+ 
   const params = new URLSearchParams({ prenom, email, source });
   const url = WEBHOOK + '?' + params.toString();
-
+ 
   await new Promise((resolve) => {
     const img = new Image();
     img.onload = img.onerror = resolve;
     img.src = url;
     setTimeout(resolve, 5000);
   });
-
+ 
   const now = new Date();
   const date = now.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   prospects.unshift({ prenom, email, date, source });
@@ -197,18 +197,18 @@ async function ajouterProspect() {
   document.getElementById('prenom').value = '';
   document.getElementById('email').value = '';
   document.getElementById('source').value = '';
-
+ 
   btn.disabled = false;
   btn.textContent = 'Ajouter à la liste';
 }
-
+ 
 function afficherMsg(texte, type) {
   const el = document.getElementById('msg');
   el.textContent = texte;
   el.className = 'msg ' + type;
   setTimeout(() => { el.className = 'msg'; }, 5000);
 }
-
+ 
 function renderListe() {
   const liste = document.getElementById('liste');
   const count = document.getElementById('count');
@@ -225,10 +225,11 @@ function renderListe() {
     return '<div class="prospect-row"><div class="avatar">' + initiales + '</div><div class="prospect-info"><div class="prospect-name">' + (p.prenom || '—') + '</div><div class="prospect-email">' + p.email + '</div><div class="prospect-meta"><span class="prospect-date">' + p.date + '</span>' + sourceBadge + '</div></div></div>';
   }).join('');
 }
-
+ 
 document.getElementById('email').addEventListener('keydown', e => {
   if (e.key === 'Enter') ajouterProspect();
 });
 </script>
 </body>
 </html>
+ 
