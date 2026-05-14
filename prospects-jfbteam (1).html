@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFBTeam · Prospects TalkFusion</title>
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --border: #2a2a4a;
+      --volt: #e8ff47;
+      --volt-dim: rgba(232,255,71,0.12);
+      --text: #f0f0f0;
+      --muted: #8888aa;
+      --success-bg: rgba(29,158,117,0.15);
+      --success-border: #1d9e75;
+      --success-text: #5dcaa5;
+      --error-bg: rgba(226,75,74,0.15);
+      --error-border: #e24b4a;
+      --error-text: #f09595;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .container { width: 100%; max-width: 420px; }
+    .logo { text-align: center; margin-bottom: 2rem; }
+    .logo-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--volt);
+      background: var(--volt-dim);
+      border: 1px solid rgba(232,255,71,0.25);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .logo h1 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+    .logo p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+    .field { margin-bottom: 1.25rem; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888aa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    select option { background: #1a1a2e; color: #f0f0f0; }
+    input:focus, select:focus { border-color: rgba(232,255,71,0.5); }
+    input::placeholder { color: var(--muted); opacity: 0.6; }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: var(--volt);
+      color: #1a1a2e;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+    button:hover { opacity: 0.9; }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .msg { display: none; margin-top: 1rem; padding: 12px 16px; border-radius: 8px; font-size: 13px; line-height: 1.5; }
+    .msg.ok { display: block; background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
+    .msg.err { display: block; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error-text); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.75rem 0 1.25rem; }
+    .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .list-title { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+    .count-badge { font-size: 11px; color: var(--volt); background: var(--volt-dim); border: 1px solid rgba(232,255,71,0.2); padding: 2px 10px; border-radius: 20px; }
+    .prospect-list { display: flex; flex-direction: column; gap: 8px; }
+    .prospect-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--volt-dim); border: 1px solid rgba(232,255,71,0.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--volt); flex-shrink: 0; }
+    .prospect-info { flex: 1; min-width: 0; }
+    .prospect-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .prospect-email { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .prospect-meta { display: flex; gap: 6px; align-items: center; margin-top: 2px; }
+    .prospect-date { font-size: 11px; color: var(--muted); opacity: 0.6; }
+    .source-badge { font-size: 10px; color: var(--volt); background: var(--volt-dim); border: 1px solid rgba(232,255,71,0.15); padding: 1px 7px; border-radius: 10px; }
+    .empty { text-align: center; font-size: 13px; color: var(--muted); padding: 1.5rem 0; }
+    .footer { text-align: center; margin-top: 1.5rem; font-size: 12px; color: var(--muted); opacity: 0.5; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <div class="logo-tag">JFBTeam</div>
+    <h1>Prospects TalkFusion</h1>
+    <p>Ajouter un contact à la liste</p>
+  </div>
+  <div class="card">
+    <div class="field">
+      <label for="prenom">Prénom</label>
+      <input type="text" id="prenom" placeholder="ex : Martin" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="ex : martin@gmail.com" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="source">Source</label>
+      <select id="source">
+        <option value="">— Sélectionner —</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="beacons.ai">beacons.ai/jfbteam</option>
+        <option value="Bouche-à-oreille">Bouche-à-oreille</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Autre">Autre</option>
+      </select>
+    </div>
+    <button id="btn" onclick="ajouterProspect()">Ajouter à la liste</button>
+    <div class="msg" id="msg"></div>
+    <hr class="divider">
+    <div class="list-header">
+      <span class="list-title">Derniers ajouts</span>
+      <span class="count-badge" id="count" style="display:none"></span>
+    </div>
+    <div class="prospect-list" id="liste">
+      <p class="empty">Aucun prospect encore.</p>
+    </div>
+  </div>
+  <p class="footer">beacons.ai/jfbteam</p>
+</div>
+
+<script>
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbzJLT23CJ1oajjZTgD5eVLgfKbA0vsFzsH5L0N_UCqQ4jYCX7yPZm6u1jLhGKBUuJe6tw/exec';
+let prospects = [];
+
+async function ajouterProspect() {
+  const prenom = document.getElementById('prenom').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const source = document.getElementById('source').value;
+  const btn = document.getElementById('btn');
+
+  if (!email) { afficherMsg('Saisis au moins un email.', 'err'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Ajout en cours...';
+
+  const params = new URLSearchParams({ prenom, email, source });
+  const url = WEBHOOK + '?' + params.toString();
+
+  await new Promise((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = resolve;
+    img.src = url;
+    setTimeout(resolve, 5000);
+  });
+
+  const now = new Date();
+  const date = now.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  prospects.unshift({ prenom, email, date, source });
+  if (prospects.length > 5) prospects = prospects.slice(0, 5);
+  renderListe();
+  afficherMsg('✓ ' + (prenom || email) + ' ajouté — vérifie ta Sheet.', 'ok');
+  document.getElementById('prenom').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('source').value = '';
+
+  btn.disabled = false;
+  btn.textContent = 'Ajouter à la liste';
+}
+
+function afficherMsg(texte, type) {
+  const el = document.getElementById('msg');
+  el.textContent = texte;
+  el.className = 'msg ' + type;
+  setTimeout(() => { el.className = 'msg'; }, 5000);
+}
+
+function renderListe() {
+  const liste = document.getElementById('liste');
+  const count = document.getElementById('count');
+  if (prospects.length === 0) {
+    liste.innerHTML = '<p class="empty">Aucun prospect encore.</p>';
+    count.style.display = 'none';
+    return;
+  }
+  count.style.display = 'inline';
+  count.textContent = prospects.length + ' contact' + (prospects.length > 1 ? 's' : '');
+  liste.innerHTML = prospects.map(p => {
+    const initiales = ((p.prenom || p.email || '?')[0]).toUpperCase();
+    const sourceBadge = p.source ? '<span class="source-badge">' + p.source + '</span>' : '';
+    return '<div class="prospect-row"><div class="avatar">' + initiales + '</div><div class="prospect-info"><div class="prospect-name">' + (p.prenom || '—') + '</div><div class="prospect-email">' + p.email + '</div><div class="prospect-meta"><span class="prospect-date">' + p.date + '</span>' + sourceBadge + '</div></div></div>';
+  }).join('');
+}
+
+document.getElementById('email').addEventListener('keydown', e => {
+  if (e.key === 'Enter') ajouterProspect();
+});
+</script>
+</body>
+</html>
