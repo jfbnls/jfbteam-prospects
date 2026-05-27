@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JFBTeam · Pipeline TalkFusion</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d1a;
+    --surface: #13132a;
+    --surface2: #1a1a35;
+    --border: #2a2a4a;
+    --volt: #e8ff47;
+    --volt-dim: rgba(232,255,71,0.10);
+    --volt-glow: rgba(232,255,71,0.25);
+    --text: #f0f0f0;
+    --muted: #7070a0;
+    --danger: #ff4f6b;
+    --success: #47ffb8;
+    --warning: #ffb347;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,255,71,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,255,71,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,13,26,0.95);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--volt);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .logo span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: var(--volt);
+    color: #0d0d1a;
+  }
+  .btn-primary:hover { background: #f2ff70; transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--volt); color: var(--volt); }
+
+  .btn-danger {
+    background: rgba(255,79,107,0.1);
+    color: var(--danger);
+    border: 1px solid rgba(255,79,107,0.3);
+  }
+  .btn-danger:hover { background: rgba(255,79,107,0.2); }
+
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--volt-glow); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--volt);
+    font-family: 'Space Mono', monospace;
+    line-height: 1;
+  }
+
+  /* ── FILTERS ── */
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-pill {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .filter-pill:hover, .filter-pill.active {
+    border-color: var(--volt);
+    color: var(--volt);
+    background: var(--volt-dim);
+  }
+
+  .search-input {
+    margin-left: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    width: 200px;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { outline: none; border-color: var(--volt); }
+  .search-input::placeholder { color: var(--muted); }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(42,42,74,0.5);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--volt-dim); }
+
+  td {
+    padding: 12px 16px;
+    vertical-align: middle;
+  }
+
+  .td-name {
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .td-email {
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── STATUS BADGES ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .badge-contacte    { background: rgba(112,112,160,0.2); color: #9090c0; border: 1px solid rgba(112,112,160,0.3); }
+  .badge-videomail   { background: rgba(71,183,255,0.12); color: #47b7ff; border: 1px solid rgba(71,183,255,0.3); }
+  .badge-vu          { background: rgba(255,179,71,0.12); color: var(--warning); border: 1px solid rgba(255,179,71,0.3); }
+  .badge-suivi       { background: rgba(232,255,71,0.12); color: var(--volt); border: 1px solid rgba(232,255,71,0.3); }
+  .badge-inscrit     { background: rgba(71,255,184,0.12); color: var(--success); border: 1px solid rgba(71,255,184,0.3); }
+  .badge-perdu       { background: rgba(255,79,107,0.12); color: var(--danger); border: 1px solid rgba(255,79,107,0.3); }
+
+  .source-tag {
+    font-size: 11px;
+    color: var(--muted);
+    background: rgba(42,42,74,0.8);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .vues-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .vues-indicator.has-vues { color: var(--volt); }
+
+  .action-next {
+    font-size: 12px;
+    color: var(--text);
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .action-next.empty { color: var(--muted); font-style: italic; }
+
+  .td-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── LOADING ── */
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+  }
+  .loading::after {
+    content: '';
+    display: inline-block;
+    animation: dots 1.2s infinite;
+  }
+  @keyframes dots {
+    0%   { content: '.'; }
+    33%  { content: '..'; }
+    66%  { content: '...'; }
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 480px;
+    padding: 28px;
+    transform: translateY(10px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--volt);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--volt);
+  }
+  select option { background: var(--surface2); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--volt);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--volt);
+    font-family: 'Space Mono', monospace;
+    z-index: 200;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .col-source, .col-vues, .col-action { display: none; }
+    .search-input { width: 140px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">JFBTeam <span>/ Pipeline TalkFusion</span></div>
+  <div class="header-actions">
+    <button class="btn btn-ghost btn-sm" onclick="loadProspects()">↻ Sync</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal()">+ Prospect</button>
+  </div>
+</header>
+
+<main>
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="stat-label">Vidéo envoyé</div><div class="stat-value" id="statVideo">—</div></div>
+    <div class="stat-card"><div class="stat-label">En suivi</div><div class="stat-value" id="statSuivi">—</div></div>
+    <div class="stat-card"><div class="stat-label">Inscrits</div><div class="stat-value" id="statInscrits">—</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-pill active" onclick="setFilter('', this)">Tous</button>
+    <button class="filter-pill" onclick="setFilter('Contacté', this)">Contacté</button>
+    <button class="filter-pill" onclick="setFilter('Vidéo mail envoyé', this)">Vidéo envoyé</button>
+    <button class="filter-pill" onclick="setFilter('Vu', this)">Vu</button>
+    <button class="filter-pill" onclick="setFilter('Suivi en cours', this)">Suivi</button>
+    <button class="filter-pill" onclick="setFilter('Inscrit', this)">Inscrit</button>
+    <button class="filter-pill" onclick="setFilter('Perdu', this)">Perdu</button>
+    <input type="text" class="search-input" placeholder="Rechercher..." oninput="searchProspects(this.value)">
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nom / Prénom</th>
+          <th>Email</th>
+          <th class="col-source">Source</th>
+          <th>Statut</th>
+          <th class="col-vues">Vues vidéo</th>
+          <th class="col-action">Prochaine action</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="7"><div class="loading">Chargement</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal ajout/modif -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Nouveau prospect</div>
+    <input type="hidden" id="editRow">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Prénom</label>
+        <input type="text" id="fPrenom" placeholder="Jean">
+      </div>
+      <div class="form-group">
+        <label>Nom</label>
+        <input type="text" id="fNom" placeholder="Dupont">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="fEmail" placeholder="jean@exemple.com">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Source</label>
+        <select id="fSource">
+          <option value="">— Choisir —</option>
+          <option>LinkedIn</option>
+          <option>Facebook</option>
+          <option>Réseau / bouche à oreille</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Statut</label>
+        <select id="fStatut">
+          <option>Contacté</option>
+          <option>Vidéo mail envoyé</option>
+          <option>Vu</option>
+          <option>Suivi en cours</option>
+          <option>Inscrit</option>
+          <option>Perdu</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nb vues vidéo</label>
+        <input type="number" id="fVues" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label>Prochaine action</label>
+        <input type="text" id="fAction" placeholder="Relancer dans 3 jours">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="fNotes" placeholder="Ce qui le retient, ses objections, son contexte..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveProspect()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxVFvuS16iz1163zRph_6VACmY0JIuwRbY5tOd9ayJD16-S4LU00eshRZalZCZAJf-eyQ/exec';
+
+// ── STATE ──
+let allProspects = [];
+let currentFilter = '';
+let currentSearch = '';
+let editingRow = null;
+
+// ── LOAD ──
+async function loadProspects() {
+  document.getElementById('tableBody').innerHTML = '<tr><td colspan="7"><div class="loading">Chargement</div></td></tr>';
+  try {
+    const url = WEBHOOK + '?action=getAll';
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.success) {
+      allProspects = data.rows || [];
+      renderTable();
+      updateStats();
+    } else {
+      showError('Erreur chargement : ' + (data.error || 'inconnue'));
+    }
+  } catch (e) {
+    // Fallback : données vides si la Sheet n'est pas encore configurée
+    allProspects = [];
+    renderTable();
+    updateStats();
+    showToast('⚠ Sheet non connectée — mode démo', true);
+  }
+}
+
+// ── RENDER ──
+function renderTable() {
+  const filtered = allProspects.filter(p => {
+    const matchFilter = !currentFilter || p.statut === currentFilter;
+    const q = currentSearch.toLowerCase();
+    const matchSearch = !q || 
+      (p.prenom||'').toLowerCase().includes(q) ||
+      (p.nom||'').toLowerCase().includes(q) ||
+      (p.email||'').toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  const tbody = document.getElementById('tableBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">◎</div><p>Aucun prospect${currentFilter ? ' avec ce statut' : ''}.</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((p, i) => {
+    const rowIdx = allProspects.indexOf(p);
+    return `
+    <tr>
+      <td><div class="td-name">${p.prenom || ''} ${p.nom || ''}</div></td>
+      <td><div class="td-email">${p.email || '—'}</div></td>
+      <td class="col-source">${p.source ? `<span class="source-tag">${p.source}</span>` : '<span class="source-tag" style="opacity:0.4">—</span>'}</td>
+      <td>${badgeStatut(p.statut)}</td>
+      <td class="col-vues"><div class="vues-indicator ${p.vues > 0 ? 'has-vues' : ''}">▶ ${p.vues || 0}</div></td>
+      <td class="col-action"><div class="action-next ${p.action ? '' : 'empty'}">${p.action || 'À définir'}</div></td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editProspect(${rowIdx})">✎</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProspect(${rowIdx})">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function badgeStatut(statut) {
+  const map = {
+    'Contacté':           'badge-contacte',
+    'Vidéo mail envoyé':  'badge-videomail',
+    'Vu':                 'badge-vu',
+    'Suivi en cours':     'badge-suivi',
+    'Inscrit':            'badge-inscrit',
+    'Perdu':              'badge-perdu',
+  };
+  const cls = map[statut] || 'badge-contacte';
+  return `<span class="badge ${cls}">${statut || 'Contacté'}</span>`;
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent   = allProspects.length;
+  document.getElementById('statVideo').textContent   = allProspects.filter(p => p.statut === 'Vidéo mail envoyé' || p.statut === 'Vu').length;
+  document.getElementById('statSuivi').textContent   = allProspects.filter(p => p.statut === 'Suivi en cours').length;
+  document.getElementById('statInscrits').textContent = allProspects.filter(p => p.statut === 'Inscrit').length;
+}
+
+// ── FILTERS ──
+function setFilter(val, el) {
+  currentFilter = val;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+function searchProspects(q) {
+  currentSearch = q;
+  renderTable();
+}
+
+// ── MODAL ──
+function openModal(prospect = null, rowIdx = null) {
+  editingRow = rowIdx;
+  document.getElementById('modalTitle').textContent = rowIdx !== null ? 'Modifier le prospect' : 'Nouveau prospect';
+  document.getElementById('fPrenom').value  = prospect?.prenom  || '';
+  document.getElementById('fNom').value     = prospect?.nom     || '';
+  document.getElementById('fEmail').value   = prospect?.email   || '';
+  document.getElementById('fSource').value  = prospect?.source  || '';
+  document.getElementById('fStatut').value  = prospect?.statut  || 'Contacté';
+  document.getElementById('fVues').value    = prospect?.vues    || '';
+  document.getElementById('fAction').value  = prospect?.action  || '';
+  document.getElementById('fNotes').value   = prospect?.notes   || '';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingRow = null;
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function editProspect(rowIdx) {
+  openModal(allProspects[rowIdx], rowIdx);
+}
+
+// ── SAVE ──
+async function saveProspect() {
+  const data = {
+    prenom: document.getElementById('fPrenom').value.trim(),
+    nom:    document.getElementById('fNom').value.trim(),
+    email:  document.getElementById('fEmail').value.trim(),
+    source: document.getElementById('fSource').value,
+    statut: document.getElementById('fStatut').value,
+    vues:   document.getElementById('fVues').value || '0',
+    action: document.getElementById('fAction').value.trim(),
+    notes:  document.getElementById('fNotes').value.trim(),
+  };
+
+  if (!data.email && !data.prenom) {
+    showToast('⚠ Prénom ou email requis', true); return;
+  }
+
+  if (editingRow !== null) {
+    data.action_type = 'update';
+    data.row_index = editingRow + 2; // +2 : header + index base 1
+    allProspects[editingRow] = { ...allProspects[editingRow], ...data };
+  } else {
+    data.action_type = 'add';
+    allProspects.push(data);
+  }
+
+  renderTable();
+  updateStats();
+  closeModal();
+  showToast('✓ Enregistré — vérifie ta Sheet');
+
+  // Sync Sheet
+  try {
+    await sendToSheet(data);
+  } catch(e) {
+    showToast('⚠ Sauvegarde locale OK, sync Sheet échouée', true);
+  }
+}
+
+async function deleteProspect(rowIdx) {
+  if (!confirm('Supprimer ce prospect ?')) return;
+  const p = allProspects[rowIdx];
+  allProspects.splice(rowIdx, 1);
+  renderTable();
+  updateStats();
+  showToast('✓ Supprimé');
+
+  try {
+    await sendToSheet({ action_type: 'delete', row_index: rowIdx + 2, email: p.email });
+  } catch(e) {}
+}
+
+// ── SEND TO SHEET (image trick for CORS) ──
+async function sendToSheet(data) {
+  const params = new URLSearchParams(data);
+  const url = WEBHOOK + '?' + params.toString();
+  await new Promise((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = resolve;
+    img.src = url;
+    setTimeout(resolve, 5000);
+  });
+}
+
+// ── TOAST ──
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function showError(msg) {
+  document.getElementById('tableBody').innerHTML = `<tr><td colspan="7"><div class="empty-state"><p style="color:var(--danger)">${msg}</p></div></td></tr>`;
+}
+
+// ── INIT ──
+loadProspects();
+</script>
+</body>
+</html>
