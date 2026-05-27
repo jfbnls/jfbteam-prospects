@@ -20,16 +20,16 @@
     --orange: #fb923c;
     --orange-dim: rgba(251,146,60,0.12);
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Courier New', monospace;
     min-height: 100vh;
   }
-
+ 
   /* NAV TABS */
   .nav {
     display: flex;
@@ -55,11 +55,11 @@
     border-bottom-color: var(--volt);
   }
   .nav button:hover:not(.active) { color: var(--text); }
-
+ 
   /* PAGES */
   .page { display: none; padding: 32px 24px; max-width: 700px; margin: 0 auto; }
   .page.active { display: block; }
-
+ 
   /* HEADER */
   .header { margin-bottom: 32px; }
   .header h1 {
@@ -70,7 +70,7 @@
     margin-bottom: 6px;
   }
   .header p { color: var(--muted); font-size: 13px; }
-
+ 
   /* FORM */
   .form-group { margin-bottom: 20px; }
   label {
@@ -95,7 +95,7 @@
   }
   input:focus, select:focus { border-color: var(--volt); }
   select option { background: var(--surface2); }
-
+ 
   .btn {
     width: 100%;
     background: var(--volt);
@@ -113,7 +113,7 @@
   }
   .btn:hover { opacity: 0.85; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
+ 
   .msg {
     margin-top: 16px;
     padding: 12px 16px;
@@ -124,7 +124,7 @@
     display: none;
   }
   .msg.visible { display: block; }
-
+ 
   /* PIPELINE */
   .stats {
     display: grid;
@@ -152,7 +152,7 @@
     margin-top: 4px;
     display: block;
   }
-
+ 
   .filter-bar {
     display: flex;
     gap: 8px;
@@ -176,9 +176,9 @@
     color: var(--volt);
     background: var(--volt-dim);
   }
-
+ 
   .prospect-list { display: flex; flex-direction: column; gap: 8px; }
-
+ 
   .prospect-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -193,7 +193,7 @@
     opacity: 0.5;
     border-color: var(--border);
   }
-
+ 
   .prospect-info { flex: 1; min-width: 0; }
   .prospect-name {
     font-size: 14px;
@@ -211,7 +211,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
+ 
   .prospect-meta {
     display: flex;
     flex-direction: column;
@@ -242,7 +242,7 @@
     background: none;
     font-size: 9px;
   }
-
+ 
   .btn-action {
     background: var(--volt-dim);
     border: 1px solid var(--volt);
@@ -263,13 +263,13 @@
     background: none;
   }
   .btn-action.undo:hover { border-color: var(--muted); color: var(--text); background: none; }
-
+ 
   .date-label {
     font-size: 10px;
     color: var(--muted);
     letter-spacing: 0.05em;
   }
-
+ 
   .empty {
     text-align: center;
     padding: 48px 0;
@@ -277,7 +277,7 @@
     font-size: 13px;
   }
   .empty span { display: block; font-size: 24px; margin-bottom: 12px; }
-
+ 
   /* MANUEL */
   .section-title {
     font-size: 11px;
@@ -288,7 +288,7 @@
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .info-box {
     background: var(--volt-dim2);
     border: 1px solid var(--border);
@@ -300,7 +300,7 @@
     line-height: 1.6;
   }
   .info-box strong { color: var(--volt); }
-
+ 
   @media (max-width: 480px) {
     .stats { grid-template-columns: 1fr 1fr; }
     .prospect-card { flex-wrap: wrap; }
@@ -308,20 +308,20 @@
 </style>
 </head>
 <body>
-
+ 
 <nav class="nav">
   <button class="active" onclick="showPage('ajouter')">+ Ajouter</button>
   <button onclick="showPage('pipeline')">Pipeline</button>
   <button onclick="showPage('manuel')">Saisie manuelle</button>
 </nav>
-
+ 
 <!-- PAGE : AJOUTER (formulaire) -->
 <div id="page-ajouter" class="page active">
   <div class="header">
     <h1>Nouveau prospect</h1>
     <p>Formulaire de capture · TalkFusion V2</p>
   </div>
-
+ 
   <div class="form-group">
     <label>Prénom</label>
     <input type="text" id="prenom" placeholder="Jean-Pierre" autocomplete="off">
@@ -340,18 +340,18 @@
       <option value="Autre">Autre</option>
     </select>
   </div>
-
+ 
   <button class="btn" id="btn-submit" onclick="ajouterProspect()">Ajouter le prospect</button>
   <div class="msg" id="msg-form"></div>
 </div>
-
+ 
 <!-- PAGE : PIPELINE -->
 <div id="page-pipeline" class="page">
   <div class="header">
     <h1>Pipeline prospects</h1>
     <p>Suivi · À rentrer dans TalkFusion</p>
   </div>
-
+ 
   <div class="stats">
     <div class="stat">
       <span class="stat-num" id="count-total">0</span>
@@ -366,43 +366,43 @@
       <span class="stat-label">Dans TalkFusion</span>
     </div>
   </div>
-
+ 
   <div class="filter-bar">
     <button class="filter-btn active" onclick="setFilter('tous')">Tous</button>
     <button class="filter-btn" onclick="setFilter('attente')">À traiter</button>
     <button class="filter-btn" onclick="setFilter('done')">Dans TalkFusion</button>
   </div>
-
+ 
   <div class="prospect-list" id="prospect-list">
     <div class="empty"><span>◎</span>Aucun prospect pour l'instant</div>
   </div>
 </div>
-
+ 
 <!-- PAGE : SAISIE MANUELLE -->
 <div id="page-manuel" class="page">
   <div class="header">
     <h1>Saisie manuelle</h1>
     <p>Rentrer plusieurs prospects rapidement</p>
   </div>
-
+ 
   <div class="info-box">
     <strong>Format :</strong> une ligne par prospect — <strong>Prénom;Email;Source</strong><br>
     Exemple : <code>Michel;michel@gmail.com;LinkedIn</code><br>
     Source possible : LinkedIn · Facebook · Formulaire · Autre
   </div>
-
+ 
   <div class="form-group">
     <label>Prospects (un par ligne)</label>
     <textarea id="manuel-input" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:12px 16px;font-family:inherit;font-size:13px;outline:none;resize:vertical;min-height:160px;line-height:1.6;" placeholder="Michel;michel@gmail.com;LinkedIn&#10;Sophie;sophie@gmail.com;Facebook&#10;Pierre;pierre@gmail.com;Formulaire"></textarea>
   </div>
-
+ 
   <button class="btn" onclick="importerManuel()">Importer les prospects</button>
   <div class="msg" id="msg-manuel"></div>
 </div>
-
+ 
 <script>
-  const WEBHOOK = 'https://script.google.com/macros/s/AKfycbx3--ANASYVA96i_OPoJYnAbxSprK-35AEpSu3UNWm3yzmrBOZwGojb-0w6bT8t935Q5A/exec';
-
+  const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxVFvuS16iz1163zRph_6VACmY0JIuwRbY5tOd9ayJD16-S4LU00eshRZalZCZAJf-eyQ/exec';
+ 
   // Storage local pour le pipeline
   function getProspects() {
     try { return JSON.parse(localStorage.getItem('jfb_prospects') || '[]'); }
@@ -411,9 +411,9 @@
   function saveProspects(list) {
     localStorage.setItem('jfb_prospects', JSON.stringify(list));
   }
-
+ 
   let currentFilter = 'tous';
-
+ 
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
@@ -421,19 +421,19 @@
     event.target.classList.add('active');
     if (id === 'pipeline') renderPipeline();
   }
-
+ 
   function setFilter(f) {
     currentFilter = f;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     renderPipeline();
   }
-
+ 
   function formatDate(iso) {
     const d = new Date(iso);
     return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
   }
-
+ 
   function envoyerWebhook(prenom, email, source) {
     const params = new URLSearchParams({ prenom, email, source });
     const url = WEBHOOK + '?' + params.toString();
@@ -444,24 +444,24 @@
       setTimeout(resolve, 5000);
     });
   }
-
+ 
   async function ajouterProspect() {
     const prenom = document.getElementById('prenom').value.trim();
     const email = document.getElementById('email').value.trim();
     const source = document.getElementById('source').value;
     const btn = document.getElementById('btn-submit');
     const msg = document.getElementById('msg-form');
-
+ 
     if (!prenom || !email) {
       showMsg(msg, '⚠ Prénom et email requis.', false);
       return;
     }
-
+ 
     btn.disabled = true;
     btn.textContent = 'Envoi en cours...';
-
+ 
     await envoyerWebhook(prenom, email, source);
-
+ 
     const prospects = getProspects();
     prospects.unshift({
       id: Date.now(),
@@ -472,23 +472,23 @@
       date: new Date().toISOString()
     });
     saveProspects(prospects);
-
+ 
     showMsg(msg, '✓ ' + prenom + ' ajouté · Vérifie ta Google Sheet.', true);
     document.getElementById('prenom').value = '';
     document.getElementById('email').value = '';
     btn.disabled = false;
     btn.textContent = 'Ajouter le prospect';
   }
-
+ 
   async function importerManuel() {
     const raw = document.getElementById('manuel-input').value.trim();
     const msg = document.getElementById('msg-manuel');
     if (!raw) { showMsg(msg, '⚠ Rien à importer.', false); return; }
-
+ 
     const lines = raw.split('\n').filter(l => l.trim());
     const prospects = getProspects();
     let count = 0;
-
+ 
     for (const line of lines) {
       const parts = line.split(';').map(p => p.trim());
       if (parts.length < 2) continue;
@@ -503,12 +503,12 @@
       });
       count++;
     }
-
+ 
     saveProspects(prospects);
     document.getElementById('manuel-input').value = '';
     showMsg(msg, '✓ ' + count + ' prospect(s) importé(s) · Vérifie ta Google Sheet.', true);
   }
-
+ 
   function toggleStatut(id) {
     const prospects = getProspects();
     const p = prospects.find(x => x.id === id);
@@ -518,28 +518,28 @@
     saveProspects(prospects);
     renderPipeline();
   }
-
+ 
   function renderPipeline() {
     const prospects = getProspects();
     const total = prospects.length;
     const attente = prospects.filter(p => p.statut === 'attente').length;
     const done = prospects.filter(p => p.statut === 'done').length;
-
+ 
     document.getElementById('count-total').textContent = total;
     document.getElementById('count-attente').textContent = attente;
     document.getElementById('count-done').textContent = done;
-
+ 
     const list = document.getElementById('prospect-list');
-
+ 
     let filtered = prospects;
     if (currentFilter === 'attente') filtered = prospects.filter(p => p.statut === 'attente');
     if (currentFilter === 'done') filtered = prospects.filter(p => p.statut === 'done');
-
+ 
     if (filtered.length === 0) {
       list.innerHTML = '<div class="empty"><span>◎</span>Aucun prospect ici</div>';
       return;
     }
-
+ 
     list.innerHTML = filtered.map(p => `
       <div class="prospect-card ${p.statut === 'done' ? 'done' : ''}">
         <div class="prospect-info">
@@ -559,7 +559,7 @@
       </div>
     `).join('');
   }
-
+ 
   function showMsg(el, text, ok) {
     el.textContent = text;
     el.style.borderLeftColor = ok ? 'var(--volt)' : 'var(--orange)';
@@ -568,7 +568,7 @@
     el.classList.add('visible');
     setTimeout(() => el.classList.remove('visible'), 4000);
   }
-
+ 
   // Init
   renderPipeline();
 </script>
