@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JFBTeam · Un revenu en plus, sans te lancer seul</title>
+<meta name="description" content="Je t'aide à te construire un revenu en plus sans avancer seul et sans te faire avoir. Je teste les outils avant toi, je passe devant, et je reste à côté de toi. Zéro promesse de gain facile.">
+
+<!-- ============================================================
+  CONFIG À VÉRIFIER PAR JFB
+  - WHATSAPP : ton numéro (déjà repris de l'ancienne page).
+  - LEAD_ENDPOINT : Formspree mwvygyzd par défaut. Remplace si tu veux
+    router les leads ailleurs (Airtable via Make, autre Formspree, etc.).
+    Si l'endpoint échoue, le résultat du quiz s'affiche quand même.
+============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Hanken+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --nuit:#1a1a2e;
+  --nuit-2:#23233f;
+  --volt:#e8ff47;
+  --volt-deep:#c4dc1f;
+  --paper:#f4f4f0;
+  --paper-2:#ecece6;
+  --ink:#1a1a2e;
+  --muted:#5c5c6b;
+  --muted-light:#a9a9bd;
+  --white:#ffffff;
+  --shadow:rgba(26,26,46,.14);
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Hanken Grotesque',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.55;
+  font-size:17px;
+  overflow-x:hidden;
+}
+h1,h2,h3,.display{font-family:'Archivo',sans-serif;font-weight:900;line-height:.98;letter-spacing:-.02em}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.eyebrow{
+  font-family:'Archivo',sans-serif;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;font-size:12px;color:var(--muted);
+}
+.volt-mark{color:var(--volt-deep)}
+
+/* JFB square */
+.jfb-sq{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:46px;height:46px;background:var(--nuit);color:var(--volt);
+  font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;letter-spacing:.02em;
+  border-radius:8px;flex:none;
+}
+
+/* ---------- NAV ---------- */
+nav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(244,244,240,.82);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(26,26,46,.08);
+}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:74px}
+.brand{display:flex;align-items:center;gap:12px;font-family:'Archivo';font-weight:800;font-size:18px;letter-spacing:-.01em}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:none;
+  font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;
+  padding:14px 22px;border-radius:999px;text-decoration:none;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn-volt{background:var(--volt);color:var(--nuit);box-shadow:0 6px 0 var(--volt-deep)}
+.btn-volt:hover{transform:translateY(-2px);box-shadow:0 8px 0 var(--volt-deep)}
+.btn-volt:active{transform:translateY(2px);box-shadow:0 2px 0 var(--volt-deep)}
+.btn-dark{background:var(--nuit);color:var(--volt)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 10px 24px var(--shadow)}
+.btn-ghost{background:transparent;color:var(--nuit);border:2px solid var(--nuit)}
+.btn-ghost:hover{background:var(--nuit);color:var(--paper)}
+.nav-cta{}
+@media(max-width:680px){.nav-cta{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;padding:84px 0 76px;overflow:hidden}
+.hero:before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(900px 520px at 88% -8%, rgba(232,255,71,.55), transparent 60%),
+    radial-gradient(700px 480px at -5% 110%, rgba(26,26,46,.06), transparent 55%);
+}
+.hero .wrap{position:relative;z-index:1}
+.kicker{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
+.kicker .dot{width:8px;height:8px;border-radius:50%;background:var(--nuit)}
+.hero h1{font-size:clamp(40px,7vw,84px);max-width:14ch}
+.hero h1 .hl{
+  background:var(--volt);box-shadow:0 0 0 .12em var(--volt);
+  border-radius:4px;padding:0 .04em;
+}
+.hero p.lead{
+  max-width:54ch;margin:28px 0 12px;font-size:clamp(17px,2vw,20px);
+  color:var(--muted);font-weight:500;
+}
+.hero p.lead b{color:var(--ink);font-weight:700}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.badges{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:36px}
+.badge{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;color:var(--muted)}
+.badge .tick{
+  width:22px;height:22px;border-radius:50%;background:var(--nuit);color:var(--volt);
+  display:grid;place-items:center;font-size:12px;flex:none;
+}
+.strip{
+  margin-top:54px;border-top:1px solid rgba(26,26,46,.12);border-bottom:1px solid rgba(26,26,46,.12);
+  padding:16px 0;font-family:'Archivo';font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;font-size:13px;color:var(--nuit);
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+}
+.strip span{opacity:.35}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:78px 0}
+.sec-head{max-width:62ch;margin-bottom:46px}
+.sec-head .eyebrow{display:block;margin-bottom:16px}
+.sec-head h2{font-size:clamp(30px,4.4vw,52px)}
+.sec-head p{margin-top:18px;color:var(--muted);font-size:18px;font-weight:500;max-width:54ch}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- PROBLEM ---------- */
+.problem{background:var(--paper-2)}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{
+  background:var(--white);border-radius:var(--r);padding:30px 28px;
+  border:1px solid rgba(26,26,46,.06);box-shadow:0 14px 30px -22px var(--shadow);
+}
+.card .n{font-family:'Archivo';font-weight:900;color:var(--volt-deep);font-size:30px;line-height:1;margin-bottom:14px}
+.card h3{font-size:21px;margin-bottom:9px}
+.card p{color:var(--muted);font-size:16px}
+
+/* ---------- UPONE REAL (dark) ---------- */
+.dark{background:var(--nuit);color:var(--paper)}
+.dark .eyebrow{color:var(--volt)}
+.dark .sec-head p{color:var(--muted-light)}
+.upone-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:start}
+@media(max-width:820px){.upone-grid{grid-template-columns:1fr;gap:30px}}
+.upone-lead p{color:#d7d7e4;font-size:18px;font-weight:500;max-width:48ch}
+.upone-lead p b{color:var(--white);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.chip{
+  background:var(--nuit-2);border:1px solid rgba(232,255,71,.22);
+  border-radius:12px;padding:14px 18px;
+}
+.chip b{display:block;font-family:'Archivo';font-weight:900;color:var(--volt);font-size:22px}
+.chip span{font-size:13.5px;color:var(--muted-light)}
+.pull{
+  background:var(--volt);color:var(--nuit);border-radius:var(--r);
+  padding:30px 30px;font-family:'Archivo';font-weight:800;font-size:21px;line-height:1.25;
+}
+.pull small{display:block;margin-top:14px;font-family:'Hanken Grotesque';font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
+
+/* ---------- OFFER ---------- */
+.offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:760px){.offer-grid{grid-template-columns:1fr}}
+.feat{background:var(--white);border-radius:var(--r);padding:30px 28px;border:1px solid rgba(26,26,46,.06)}
+.feat.hero-feat{grid-column:1/-1;background:var(--nuit);color:var(--paper);position:relative;overflow:hidden}
+.feat.hero-feat:after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(232,255,71,.3),transparent 70%)}
+.feat .tag{font-family:'Archivo';font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--volt-deep);margin-bottom:12px}
+.feat.hero-feat .tag{color:var(--volt)}
+.feat h3{font-size:22px;margin-bottom:10px}
+.feat p{color:var(--muted);font-size:16px}
+.feat.hero-feat p{color:#cfcfe0;font-size:18px;max-width:46ch}
+
+/* ---------- STEPS ---------- */
+.steps{background:var(--paper-2)}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:760px){.steps-grid{grid-template-columns:1fr}}
+.step{background:var(--white);border-radius:var(--r);padding:32px 28px;border:1px solid rgba(26,26,46,.06)}
+.step .num{
+  width:52px;height:52px;border-radius:14px;background:var(--volt);color:var(--nuit);
+  display:grid;place-items:center;font-family:'Archivo';font-weight:900;font-size:24px;margin-bottom:20px;
+}
+.step h3{font-size:20px;margin-bottom:10px}
+.step p{color:var(--muted);font-size:16px}
+
+/* ---------- STORY ---------- */
+.story .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:46px;align-items:center}
+@media(max-width:820px){.story .wrap{grid-template-columns:1fr;gap:30px}}
+.story h2{font-size:clamp(28px,4vw,46px);max-width:16ch}
+.story .body p{color:var(--muted);font-size:18px;font-weight:500;margin-bottom:18px}
+.story .body p:last-child{margin-bottom:0}
+.story .body p b{color:var(--ink);font-weight:700}
+.sig{margin-top:26px;display:flex;align-items:center;gap:14px}
+.sig .name{font-family:'Archivo';font-weight:800;font-size:17px}
+.sig .name span{display:block;font-family:'Hanken Grotesque';font-weight:500;font-size:14px;color:var(--muted)}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--nuit);color:var(--paper)}
+.quiz .eyebrow{color:var(--volt)}
+.quiz-box{
+  background:var(--nuit-2);border:1px solid rgba(232,255,71,.18);
+  border-radius:24px;padding:40px;max-width:760px;margin:0 auto;
+  box-shadow:0 40px 80px -50px rgba(0,0,0,.7);
+}
+@media(max-width:560px){.quiz-box{padding:26px 20px}}
+.q-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.q-step{font-family:'Archivo';font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--volt)}
+.q-time{font-size:13px;color:var(--muted-light)}
+.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:30px}
+.bar i{display:block;height:100%;background:var(--volt);border-radius:99px;width:25%;transition:width .35s ease}
+.q-title{font-family:'Archivo';font-weight:900;font-size:clamp(22px,3.2vw,30px);line-height:1.08;margin-bottom:6px}
+.q-sub{color:var(--muted-light);font-size:15px;margin-bottom:24px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{
+  text-align:left;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:16px 18px;cursor:pointer;color:var(--paper);
+  display:flex;gap:15px;align-items:flex-start;transition:border-color .15s,background .15s,transform .12s;
+  font-family:'Hanken Grotesque';
+}
+.opt:hover{border-color:var(--volt);background:rgba(232,255,71,.07)}
+.opt.sel{border-color:var(--volt);background:rgba(232,255,71,.12)}
+.opt .letter{
+  width:28px;height:28px;border-radius:8px;background:rgba(232,255,71,.16);color:var(--volt);
+  font-family:'Archivo';font-weight:800;display:grid;place-items:center;flex:none;font-size:14px;
+}
+.opt b{display:block;font-weight:700;font-size:16px}
+.opt span{color:var(--muted-light);font-size:14px}
+.q-nav{display:flex;justify-content:space-between;margin-top:26px;gap:12px}
+.linklike{background:none;border:none;color:var(--muted-light);cursor:pointer;font-family:'Archivo';font-weight:700;font-size:14px}
+.linklike:hover{color:var(--paper)}
+.field{margin-top:6px}
+.field label{display:block;font-weight:600;font-size:14px;margin-bottom:7px;color:var(--paper)}
+.field input{
+  width:100%;padding:15px 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.05);color:var(--paper);font-family:'Hanken Grotesque';font-size:16px;margin-bottom:16px;
+}
+.field input:focus{outline:none;border-color:var(--volt)}
+.field input::placeholder{color:#6f6f86}
+.privacy{font-size:13px;color:var(--muted-light);margin-top:6px}
+/* result */
+.result{display:none;text-align:center}
+.result.show{display:block;animation:pop .5s ease}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.result .badge-r{font-family:'Archivo';font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--volt);margin-bottom:14px}
+.result h3{font-family:'Archivo';font-weight:900;font-size:30px;margin-bottom:14px}
+.result p{color:var(--muted-light);font-size:17px;max-width:46ch;margin:0 auto 26px}
+.result .btn{margin:0 auto}
+.disclaimer{font-size:12.5px;color:var(--muted-light);text-align:center;margin-top:26px;max-width:620px;margin-left:auto;margin-right:auto}
+
+/* ---------- FAQ ---------- */
+.faq-list{max-width:820px;margin:0 auto}
+.faq-item{border-bottom:1px solid rgba(26,26,46,.12)}
+.faq-q{
+  width:100%;background:none;border:none;cursor:pointer;text-align:left;
+  padding:24px 4px;display:flex;justify-content:space-between;align-items:center;gap:20px;
+  font-family:'Archivo';font-weight:800;font-size:19px;color:var(--ink);
+}
+.faq-q .pm{font-size:26px;color:var(--volt-deep);transition:transform .25s;flex:none;line-height:1}
+.faq-item.open .pm{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a p{padding:0 4px 24px;color:var(--muted);font-size:16.5px;max-width:70ch}
+
+/* ---------- FINAL CTA ---------- */
+.final{background:var(--volt);color:var(--nuit);text-align:center}
+.final h2{font-size:clamp(32px,5vw,58px);max-width:18ch;margin:0 auto 18px}
+.final p{font-weight:600;font-size:19px;margin-bottom:30px}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--nuit);color:var(--paper);padding:56px 0 40px}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:30px;flex-wrap:wrap}
+.foot-tag{font-family:'Archivo';font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:13px;color:var(--volt);margin-top:14px}
+.foot-link a{color:var(--volt);text-decoration:none;font-family:'Archivo';font-weight:800;font-size:20px}
+.foot-meta{margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;color:var(--muted-light);line-height:1.7}
+.foot-meta a{color:var(--muted-light)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="jfb-sq">JFB</span>JFBTeam</div>
+    <a href="#quiz" class="btn btn-dark nav-cta">Voir si on avance ensemble&nbsp;→</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker eyebrow"><span class="dot"></span>Papyboomer actif · JFBTeam</div>
+    <h1>Un revenu en plus.<br>Sans te lancer <span class="hl">seul</span>.<br>Sans te faire avoir.</h1>
+    <p class="lead">Je teste les outils <b>avant toi</b>. Je passe devant. Et je reste à côté de toi pendant que tu apprends. Pas de promesse de gagner sans rien faire&nbsp;— j'ai vu où ça mène.</p>
+    <div class="hero-actions">
+      <a href="#quiz" class="btn btn-volt">Voir si on est faits pour avancer ensemble&nbsp;→</a>
+      <a href="#how" class="btn btn-ghost">Comment ça marche</a>
+    </div>
+    <div class="badges">
+      <div class="badge"><span class="tick">✓</span>Entrée gratuite, sur invitation</div>
+      <div class="badge"><span class="tick">✓</span>Tu testes avant de t'engager</div>
+      <div class="badge"><span class="tick">✓</span>Zéro promesse de gain facile</div>
+    </div>
+    <div class="strip">Wake up <span>·</span> Stand up <span>·</span> Live up</div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Le vrai blocage</span>
+      <h2>Se construire un revenu en ligne, quand on démarre seul, c'est un mur.</h2>
+      <p>Tu sais que c'est possible. Mais à chaque fois, quelque chose coince.</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal"><div class="n">01</div><h3>Tu te méfies.</h3><p>T'as déjà vu des gens se faire plumer. Moi le premier, je me suis fait avoir. C'est normal de ne plus signer les yeux fermés.</p></div>
+      <div class="card reveal"><div class="n">02</div><h3>Tu serais seul.</h3><p>Derrière un écran, sans personne à qui demander, on lâche vite. Le vrai frein, c'est pas l'outil. C'est la solitude.</p></div>
+      <div class="card reveal"><div class="n">03</div><h3>T'en as marre des promesses.</h3><p>« Gagne 5 000 € par mois sans rien faire. » Toi aussi t'as arrêté de croire ces gens-là. Tant mieux.</p></div>
+      <div class="card reveal"><div class="n">04</div><h3>T'as peur d'arriver trop tard.</h3><p>Se lancer à 50 ou 60 ans passés sans avoir l'air ridicule. Spoiler : c'est souvent le meilleur moment pour le faire.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- UPONE — LA RÉALITÉ -->
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Soyons clairs</span>
+      <h2>Upone, c'est quoi&nbsp;— vraiment.</h2>
+    </div>
+    <div class="upone-grid">
+      <div class="upone-lead reveal">
+        <p>Pas une plateforme magique qui prospecte à ta place pendant que tu dors. <b>Un club privé.</b> Quatre secteurs : voyage &amp; lifestyle, shopping de luxe avec MySmart.club, formation avec MMA, et la recommandation. Tu actives seulement ce qui te sert vraiment.</p>
+        <div class="chips">
+          <div class="chip"><b>4</b><span>secteurs, un seul accès</span></div>
+          <div class="chip"><b>Gratuit</b><span>entrée sur invitation</span></div>
+          <div class="chip"><b>27</b><span>modules · 200+ vidéos</span></div>
+          <div class="chip"><b>1er achat</b><span>pack déjà remboursé</span></div>
+        </div>
+      </div>
+      <div class="pull reveal">
+        « Un Social Connector ne vend rien. Il connecte les gens à une meilleure façon d'acheter ce qu'ils consomment déjà. »
+        <small>Le principe d'Upone</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Ce que je propose, en vrai</span>
+      <h2>Pas un outil. Quelqu'un à côté de toi.</h2>
+    </div>
+    <div class="offer-grid">
+      <div class="feat hero-feat reveal">
+        <div class="tag">Le cœur</div>
+        <h3>Mon accompagnement</h3>
+        <p>Ce que tu prends au départ, c'est pas une formation ni une appli. C'est quelqu'un qui a déjà testé, qui passe devant, et qui reste là quand ça coince. Le reste, ce sont juste des outils.</p>
+      </div>
+      <div class="feat reveal"><div class="tag">La porte</div><h3>Tu ne démarres jamais seul</h3><p>Formation et cercle dès le premier jour. On avance ensemble, à ton rythme.</p></div>
+      <div class="feat reveal"><div class="tag">Le revenu</div><h3>Lié à ton activité réelle</h3><p>Le membership récurrent peut rapporter. Mais ça dépend de ce que tu fais, pas d'une promesse. Aucune garantie de gain.</p></div>
+      <div class="feat reveal"><div class="tag">Le geste</div><h3>Tu connectes, tu ne vends pas</h3><p>Tu recommandes ce que tu utilises déjà à ceux qui en ont besoin. C'est tout.</p></div>
+      <div class="feat reveal"><div class="tag">La règle</div><h3>Je teste avant d'en parler</h3><p>J'ai déjà entraîné des gens dans des projets qui se sont arrêtés. Plus jamais. Aujourd'hui je teste seul, à fond, d'abord.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Concrètement</span>
+      <h2>Comment ça se passe.</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal"><div class="num">1</div><h3>Le diagnostic</h3><p>4 questions, 2 minutes. Ça te dit où tu en es. Et ça me dit qui j'ai en face.</p></div>
+      <div class="step reveal"><div class="num">2</div><h3>On en parle</h3><p>Un appel, pas un script de vente. On regarde si c'est le bon moment pour toi. Si c'est non, je te le dis.</p></div>
+      <div class="step reveal"><div class="num">3</div><h3>Tu avances, je reste à côté</h3><p>La porte s'ouvre, tu testes ce qui te sert, je passe devant à chaque étape. Pas de calendrier miracle. Juste régulier.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow" style="display:block;margin-bottom:16px">Pourquoi me croire</span>
+      <h2>Et pourquoi je ne te promets rien.</h2>
+    </div>
+    <div class="body reveal">
+      <p>J'ai passé trente ans dans l'informatique, et trente-cinq dans le marketing de réseau. Je me suis planté plusieurs fois. J'ai promu des projets qui se sont arrêtés, et j'ai entraîné des gens avec moi — certains ont perdu. Je ne suis pas fier de tout ça, mais je ne le cache plus.</p>
+      <p>C'est même devenu ma façon de bosser : <b>ne plus jamais embarquer quelqu'un dans un truc que je n'ai pas testé moi-même d'abord.</b></p>
+      <p>Alors non, je ne te promettrai jamais de gagner sans rien faire. C'est le discours de ceux qui ne sont plus là quand ça tourne mal. Moi je préfère qu'on avance ensemble, prudemment, et qu'on soit encore là tous les deux dans un an.</p>
+      <div class="sig">
+        <span class="jfb-sq">JFB</span>
+        <div class="name">Jean-François Badier<span>JFBTeam — Papyboomer actif</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz" id="quiz">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow">Le diagnostic · 2 minutes</span>
+      <h2>On est faits pour avancer ensemble&nbsp;?</h2>
+      <p style="margin-left:auto;margin-right:auto">4 questions honnêtes. Pas de bonne ou de mauvaise réponse — juste de quoi voir clair.</p>
+    </div>
+
+    <div class="quiz-box reveal">
+      <!-- QUESTIONS -->
+      <div id="qArea">
+        <div class="q-top">
+          <span class="q-step" id="qStep">Question 1 / 4</span>
+          <span class="q-time">⏱ Moins de 2 minutes</span>
+        </div>
+        <div class="bar"><i id="qBar"></i></div>
+        <div class="q-title" id="qTitle"></div>
+        <div class="q-sub" id="qSub"></div>
+        <div class="opts" id="qOpts"></div>
+        <div class="q-nav">
+          <button class="linklike" id="qBack" style="visibility:hidden">← Retour</button>
+          <span></span>
+        </div>
+      </div>
+
+      <!-- CONTACT STEP -->
+      <div id="contactArea" style="display:none">
+        <div class="q-title" style="margin-bottom:14px">Dernière étape.</div>
+        <div class="q-sub">Où je t'envoie ton bilan&nbsp;? On garde ça simple.</div>
+        <div class="field">
+          <label>Ton prénom</label>
+          <input type="text" id="fName" placeholder="Prénom" autocomplete="given-name">
+          <label>Ton email</label>
+          <input type="email" id="fEmail" placeholder="ton@email.com" autocomplete="email">
+        </div>
+        <button class="btn btn-volt" id="seeResult" style="width:100%;justify-content:center">Voir mon résultat&nbsp;→</button>
+        <p class="privacy">🔒 Pas de spam. Tes infos restent entre nous et ne sont jamais revendues.</p>
+        <div class="q-nav"><button class="linklike" id="cBack">← Retour</button><span></span></div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="result" id="rHigh">
+        <div class="badge-r">Profil aligné</div>
+        <h3>On est faits pour avancer ensemble.</h3>
+        <p>Ton profil colle à ma façon de bosser. La suite logique : un appel de 30 min, on regarde par où commencer. Sans engagement.</p>
+        <a class="btn btn-volt" id="waHigh" target="_blank" rel="noopener">Parler à JFB sur WhatsApp&nbsp;→</a>
+      </div>
+      <div class="result" id="rMid">
+        <div class="badge-r">Bon potentiel</div>
+        <h3>Y'a du potentiel — parlons-en.</h3>
+        <p>Quelques trucs à clarifier avant de te lancer. Un échange rapide nous dira si c'est le bon moment pour toi.</p>
+        <a class="btn btn-volt" id="waMid" target="_blank" rel="noopener">Échanger avec JFB&nbsp;→</a>
+      </div>
+      <div class="result" id="rLow">
+        <div class="badge-r">Prends ton temps</div>
+        <h3>Rien ne presse.</h3>
+        <p>Avant de te lancer, mieux vaut comprendre les bases. Écris-moi, je te file des ressources pour avancer à ton rythme. Sans pression.</p>
+        <a class="btn btn-volt" id="waLow" target="_blank" rel="noopener">Recevoir des ressources&nbsp;→</a>
+      </div>
+    </div>
+
+    <p class="disclaimer">Ce diagnostic sert à voir si ma façon d'accompagner correspond à ta situation. Il ne garantit aucun revenu. Les résultats dépendent de l'implication réelle de chacun.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow">Questions fréquentes</span>
+      <h2>Ce que tu veux savoir.</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q">C'est quoi exactement Upone&nbsp;?<span class="pm">+</span></button>
+        <div class="faq-a"><p>Un club privé d'achat et de formation, organisé en quatre secteurs : voyage &amp; lifestyle, shopping de luxe (MySmart.club), formation (MMA) et recommandation. L'entrée est gratuite et sur invitation. Tu actives ensuite uniquement les packs qui te servent vraiment — voyage, luxe, formation. Ce n'est pas une plateforme qui prospecte à ta place ; c'est un accès à des services au prix de gros, plus mon accompagnement.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Est-ce que c'est du MLM&nbsp;?<span class="pm">+</span></button>
+        <div class="faq-a"><p>Il y a une dimension réseau : si tu recommandes et que des gens te suivent, tu touches sur cette activité. Mais ce n'est pas une pyramide centrée sur le recrutement. À la base, ce sont de vrais services qu'on utilise — voyage, beauté, formation. On gagne sur les packs réellement utilisés, pas sur du vent. Moi, je touche sur ce dont je me sers vraiment.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Combien ça coûte pour commencer&nbsp;?<span class="pm">+</span></button>
+        <div class="faq-a"><p>L'entrée est gratuite, sur invitation. Ensuite, tu actives les packs qui te servent : Travel &amp; Lifestyle à 100 $/an, Luxury Shopping à 100 $/an, Learning &amp; Growth (formation) à 250 $/an. Pas de stock à acheter, pas de produits physiques à revendre. On regarde ensemble ce qui a du sens pour toi pendant l'appel — rien d'imposé.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Et si je n'ai aucune expérience&nbsp;?<span class="pm">+</span></button>
+        <div class="faq-a"><p>C'est exactement pour ça que je suis là. Tu n'as besoin d'aucune expérience préalable. Mon rôle, c'est de passer devant et de t'accompagner pas à pas. On commence simple, et on avance à ton rythme.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">En combien de temps des résultats&nbsp;?<span class="pm">+</span></button>
+        <div class="faq-a"><p>Je ne te donnerai pas de calendrier qui fait rêver, parce que ce serait malhonnête. Ça dépend du temps que tu y mets, de ta régularité et du moment où tu te lances. Ce que je peux te promettre, c'est de ne pas te laisser seul, et de ne jamais te raconter que ça tombe tout cuit. Aucun gain n'est garanti.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="wrap">
+    <h2>Prêt à voir si on avance ensemble&nbsp;?</h2>
+    <p>2 minutes. Sans engagement. Sans promesse.</p>
+    <a href="#quiz" class="btn btn-dark">Je fais le diagnostic&nbsp;→</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="brand" style="color:var(--paper)"><span class="jfb-sq">JFB</span>JFBTeam</div>
+        <div class="foot-tag">Wake up · Stand up · Live up</div>
+      </div>
+      <div class="foot-link">
+        <div style="font-size:13px;color:var(--muted-light);margin-bottom:6px">Mon accès Upone</div>
+        <a href="https://upone.ai/jfbteam" target="_blank" rel="noopener">upone.ai/jfbteam</a>
+      </div>
+    </div>
+    <div class="foot-meta">
+      Jean-François Badier · JFBTeam — Papyboomer actif · <a href="mailto:badierjf@gmail.com">badierjf@gmail.com</a><br>
+      © 2026 JFBTeam · Résultats non garantis — ils dépendent de l'implication réelle de chaque membre. Rien sur cette page ne constitue une promesse ou une garantie de revenu.
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===== CONFIG ===== */
+var WHATSAPP = "33614213266"; // ton numéro
+var LEAD_ENDPOINT = "https://formspree.io/f/mwvygyzd"; // à confirmer / remplacer
+
+/* ===== QUIZ DATA ===== */
+var questions = [
+  {
+    title:"Quelle est ta situation aujourd'hui ?",
+    sub:"Choisis ce qui te ressemble le plus.",
+    opts:[
+      {l:"A",t:"Salarié·e, je veux un revenu en plus",d:"Un salaire fixe, et l'envie de construire à côté",p:2},
+      {l:"B",t:"Freelance / indépendant·e",d:"Des revenus variables que tu veux sécuriser",p:2},
+      {l:"C",t:"En transition — retraite, reconversion, entre deux",d:"Un bon moment pour repartir sur quelque chose",p:2},
+      {l:"D",t:"Je veux juste en savoir plus",d:"Curieux·se, pas encore décidé·e",p:1}
+    ]
+  },
+  {
+    title:"Ton objectif principal ?",
+    sub:"Ce que tu veux vraiment.",
+    opts:[
+      {l:"A",t:"500 à 2 000 € en plus par mois",d:"Un revenu complémentaire régulier",p:3},
+      {l:"B",t:"Rester dans le mouvement, me sentir utile",d:"Pas seulement l'argent — le lien aussi",p:3},
+      {l:"C",t:"Construire quelque chose sur la durée",d:"Un actif qui tient dans le temps",p:3},
+      {l:"D",t:"Tester sans trop m'engager pour l'instant",d:"Voir ce que ça donne avant de décider",p:1}
+    ]
+  },
+  {
+    title:"Combien de temps par semaine ?",
+    sub:"Sois honnête — il n'y a pas de mauvaise réponse.",
+    opts:[
+      {l:"A",t:"Plus de 10 heures",d:"Prêt·e à t'investir dès le départ",p:3},
+      {l:"B",t:"Entre 5 et 10 heures",d:"De quoi bien démarrer",p:3},
+      {l:"C",t:"Moins de 5 heures",d:"Possible, mais ça prendra plus de temps",p:2},
+      {l:"D",t:"Je ne sais pas encore",d:"À voir selon tes contraintes",p:1}
+    ]
+  },
+  {
+    title:"Toi et le digital ?",
+    sub:"Pas besoin d'être expert — juste honnête.",
+    opts:[
+      {l:"A",t:"À l'aise, j'utilise des outils tous les jours",d:"Réseaux, mail, quelques apps",p:3},
+      {l:"B",t:"Curieux·se, j'ai envie d'apprendre",d:"L'IA, les outils, ça t'attire",p:3},
+      {l:"C",t:"Débutant·e mais motivé·e",d:"Tu ne maîtrises pas encore, mais t'es partant·e",p:2},
+      {l:"D",t:"Plutôt fâché·e avec la technique",d:"Les outils numériques, c'est pas trop ton truc",p:1}
+    ]
+  }
+];
+
+var current=0, score=0, answers=[];
+var qArea=document.getElementById('qArea');
+var contactArea=document.getElementById('contactArea');
+var qTitle=document.getElementById('qTitle'), qSub=document.getElementById('qSub'),
+    qOpts=document.getElementById('qOpts'), qStep=document.getElementById('qStep'),
+    qBar=document.getElementById('qBar'), qBack=document.getElementById('qBack');
+
+function render(){
+  var q=questions[current];
+  qStep.textContent="Question "+(current+1)+" / "+questions.length;
+  qBar.style.width=((current+1)/questions.length*100)+"%";
+  qTitle.textContent=q.title;
+  qSub.textContent=q.sub;
+  qOpts.innerHTML="";
+  q.opts.forEach(function(o,i){
+    var b=document.createElement('button');
+    b.className="opt"+(answers[current]===i?" sel":"");
+    b.innerHTML='<span class="letter">'+o.l+'</span><span><b>'+o.t+'</b><span>'+o.d+'</span></span>';
+    b.onclick=function(){ choose(i,o.p); };
+    qOpts.appendChild(b);
+  });
+  qBack.style.visibility=current===0?"hidden":"visible";
+}
+function choose(i,p){
+  answers[current]={i:i,p:p};
+  // recompute score from answers
+  setTimeout(function(){
+    if(current<questions.length-1){ current++; render(); }
+    else{ goContact(); }
+  },180);
+  render();
+}
+qBack.onclick=function(){ if(current>0){current--; render();} };
+
+function goContact(){ qArea.style.display="none"; contactArea.style.display="block"; }
+document.getElementById('cBack').onclick=function(){
+  contactArea.style.display="none"; qArea.style.display="block"; render();
+};
+
+document.getElementById('seeResult').onclick=function(){
+  var name=document.getElementById('fName').value.trim();
+  var email=document.getElementById('fEmail').value.trim();
+  if(!email || email.indexOf('@')<0){ document.getElementById('fEmail').focus(); document.getElementById('fEmail').style.borderColor="#ff6b6b"; return; }
+  score=answers.reduce(function(s,a){return s+(a?a.p:0);},0);
+  // send lead (graceful — result shows regardless)
+  try{
+    var payload={prenom:name,email:email,score:score,
+      reponses:answers.map(function(a,idx){return (idx+1)+":"+(a?a.i:"-");}).join(" | "),
+      source:"landing-upone-quiz"};
+    fetch(LEAD_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+  showResult(name);
+};
+
+function wa(text){ return "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(text); }
+function showResult(name){
+  contactArea.style.display="none";
+  var hi="Salut JFB, je viens de faire le diagnostic"+(name?" ("+name+")":"")+" et mon profil est aligné. On peut en parler ?";
+  var mi="Salut JFB, j'ai fait le diagnostic"+(name?" ("+name+")":"")+" et j'aimerais en parler avec toi.";
+  var lo="Salut JFB, j'ai fait le diagnostic"+(name?" ("+name+")":"")+" et je veux d'abord en savoir plus, à mon rythme.";
+  document.getElementById('waHigh').href=wa(hi);
+  document.getElementById('waMid').href=wa(mi);
+  document.getElementById('waLow').href=wa(lo);
+  var el = score>=9 ? 'rHigh' : (score>=5 ? 'rMid' : 'rLow');
+  document.getElementById(el).classList.add('show');
+}
+render();
+
+/* ===== FAQ ===== */
+document.querySelectorAll('.faq-q').forEach(function(b){
+  b.onclick=function(){
+    var item=b.parentElement;
+    var a=item.querySelector('.faq-a');
+    var open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(it){it.classList.remove('open');it.querySelector('.faq-a').style.maxHeight=null;});
+    if(!open){ item.classList.add('open'); a.style.maxHeight=a.scrollHeight+"px"; }
+  };
+});
+
+/* ===== REVEAL ON SCROLL ===== */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.14});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+</script>
+</body>
+</html>
